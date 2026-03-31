@@ -1,0 +1,57 @@
+#!/bin/bash
+
+if ! command -v figlet &> /dev/null; then
+    echo "Error: 'figlet' is not installed."
+    echo "Install it: sudo apt install figlet"
+    exit 1
+fi
+
+colors=(31 32 33 34 35 36 37)
+index=0
+
+start_time=$(date +%s)
+
+tput civis
+
+cleanup() {
+    tput cnorm
+    clear
+    exit 0
+}
+trap cleanup SIGINT SIGTERM
+
+while true; do
+    current_time=$(date +%s)
+    elapsed=$(( current_time - start_time ))
+
+    hours=$(( elapsed / 3600 ))
+    minutes=$(( (elapsed % 3600) / 60 ))
+    seconds=$(( elapsed % 60 ))
+    time_display=$(printf "%02d:%02d:%02d" $hours $minutes $seconds)
+
+    term_width=$(tput cols)
+    term_height=$(tput lines)
+
+    big_output=$(figlet -f big "$time_display")
+    text_width=$(echo "$big_output" | head -n 1 | wc -c)
+    text_height=$(echo "$big_output" | wc -l)
+
+    x=$(( (term_width - text_width) / 2 ))
+    y=$(( (term_height - text_height) / 2 ))
+
+    clear
+    tput cup $y 0
+    echo -e "\e[1;${colors[$index]}m"
+    
+    echo "$big_output" | while IFS= read -r line; do
+        printf "%${x}s%s\n" "" "$line"
+    done
+    echo -ne "\e[0m"
+
+    read -n 1 -t 1 -s key
+    if [[ "$key" == "f" || "$key" == "F" ]]; then
+        index=$(( (index + 1) % ${#colors[@]} ))
+    elif [[ "$key" == "q" || "$key" == "Q" ]]; then
+        cleanup
+    fi
+done
