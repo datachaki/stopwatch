@@ -8,6 +8,9 @@ Before running `stopwatch`, ensure you have the following installed:
 2.  **ncurses** 
 3.  **figlet**
 
+
+Installation
+
 ```bash
 git clone https://github.com/datachaki/stopwatch
 cd stopwatch
