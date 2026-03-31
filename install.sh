@@ -2,8 +2,8 @@
 
 chmod +x stopwatch
 
-echo "Installing watch_time to /usr/local/bin..."
-sudo cp stopwatch /usr/local/bin/watch_time
+echo "Installing stopwatch to /usr/local/bin..."
+sudo cp stopwatch /usr/local/bin/stopwatch
 
 echo "------------------------------------------------"
 echo "Success! You can now run 'stopwatch' anywhere."
